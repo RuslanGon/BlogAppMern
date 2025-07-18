@@ -1,6 +1,6 @@
 import { body } from 'express-validator';
 
-const registerValidator = [
+export const registerValidator = [
   body('email')
     .isEmail()
     .withMessage('Email должен быть валидным адресом'),
