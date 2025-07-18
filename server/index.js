@@ -1,20 +1,7 @@
 import express from 'express'
 
+import startServer from './db.js';
+
 const app = express()
 
-app.get('/', (req, res) => {
-res.send('Hello Word1')
-})
-
-app.post('/auth/login', (req, res) => {
-    res.json({
-        success: true
-    })
-})
-
-app.listen(4444, (err) => {
-if(err) {
-return console.log(err);
-}
-console.log('server start');
-})
+startServer(app);
