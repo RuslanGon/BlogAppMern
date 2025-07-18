@@ -3,7 +3,13 @@ import express from 'express'
 const app = express()
 
 app.get('/', (req, res) => {
-res.send('Hello')
+res.send('Hello Word1')
+})
+
+app.post('/auth/login', (req, res) => {
+    res.json({
+        success: true
+    })
 })
 
 app.listen(4444, (err) => {
