@@ -26,7 +26,7 @@ app.get('/posts', getAllPosts)
 
 app.get('/posts/:id', getPostById)
 
-app.delete('/posts/:id', deletePost )
+app.delete('/posts/:id', checkAuth, deletePost )
 
 
 
