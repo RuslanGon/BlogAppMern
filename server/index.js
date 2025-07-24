@@ -7,6 +7,7 @@ import UserModel from './models/User.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import {checkAuth} from './utils/checkAuth.js'
 
 dotenv.config();
 
@@ -85,6 +86,21 @@ app.post('/auth/login', async (req, res) => {
     res.status(500).json({
       message: 'Не удалось авторизоваться',
     });
+  }
+});
+
+app.get('/auth/me', checkAuth, async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.userId).select('-passwordHash');
+
+    if (!user) {
+      return res.status(404).json({ message: 'Пользователь не найден' });
+    }
+
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Нет доступа' });
   }
 });
 
