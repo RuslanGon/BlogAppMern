@@ -4,15 +4,22 @@ import startServer from './db.js';
 import registerValidator from './validations/auth.js';
 import {checkAuth} from './utils/checkAuth.js'
 import { getMe, login, register } from './controllers/UserController.js';
+import { createPost } from './controllers/PostContloller.js';
+import postValidator from './validations/post.js';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Auth
 app.post("/auth/register", registerValidator, register);
 
 app.post('/auth/login', login);
 
 app.get('/auth/me', checkAuth, getMe);
+
+// Post
+
+app.post('/posts', checkAuth, postValidator, createPost)
 
 startServer(app);
