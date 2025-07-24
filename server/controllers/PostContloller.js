@@ -2,7 +2,7 @@ import PostModel from "../models/Post.js";
 
 export const getAllPosts = async (req, res) => {
   try {
-    const post = await PostModel.find();
+    const post = await PostModel.find().populate('user').exec();
     res.json(post);
   } catch (error) {
     console.error("Ошибка при получении постов:", error);
@@ -11,6 +11,28 @@ export const getAllPosts = async (req, res) => {
     });
   }
 };
+
+export const getPostById = async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    const post = await PostModel.findById(postId).populate('user');
+
+    if (!post) {
+      return res.status(404).json({
+        message: 'Статья не найдена',
+      });
+    }
+
+    res.json(post);
+  } catch (error) {
+    console.error("Ошибка при получении статьи:", error);
+    res.status(500).json({
+      message: "Не удалось получить статью",
+    });
+  }
+};
+
 
 
 export const createPost = async (req, res) => {
