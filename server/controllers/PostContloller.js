@@ -16,15 +16,18 @@ export const getPostById = async (req, res) => {
   try {
     const postId = req.params.id;
 
-    const post = await PostModel.findById(postId).populate('user');
+    const post = await PostModel.findByIdAndUpdate(
+      postId,
+      { $inc: { viewsCount: 1 } },
+      { returnDocument: 'after' } 
+    ).populate('user', '-passwordHash'); 
 
     if (!post) {
-      return res.status(404).json({
-        message: 'Статья не найдена',
-      });
+      return res.status(404).json({ message: "Статья не найдена" });
     }
 
     res.json(post);
+
   } catch (error) {
     console.error("Ошибка при получении статьи:", error);
     res.status(500).json({
@@ -32,6 +35,7 @@ export const getPostById = async (req, res) => {
     });
   }
 };
+
 
 export const deletePost = async (req, res) => {
     try {
