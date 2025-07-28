@@ -2,8 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
 import multer from 'multer';
-import startServer from './db.js'; // твоя функция подключения к БД
-
+import startServer from './db.js'; 
 import registerValidator from './validations/auth.js';
 import { checkAuth } from './utils/checkAuth.js';
 import { getMe, login, register } from './controllers/UserController.js';
