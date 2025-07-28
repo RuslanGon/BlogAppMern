@@ -20,15 +20,15 @@ app.get('/auth/me', checkAuth, getMe);
 
 // Post
 
-app.post('/posts', checkAuth, postValidator, createPost)
-
 app.get('/posts', getAllPosts)
 
 app.get('/posts/:id', getPostById)
 
+app.post('/posts', checkAuth, postValidator, createPost)
+
 app.delete('/posts/:id', checkAuth, deletePost )
 
-app.patch('/posts/:id', updatePost)
+app.patch('/posts/:id',checkAuth, updatePost)
 
 
 
