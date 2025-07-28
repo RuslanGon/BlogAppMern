@@ -73,3 +73,36 @@ export const createPost = async (req, res) => {
     });
   }
 };
+
+export const updatePost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    const updateResult = await PostModel.updateOne(
+      { _id: postId },
+      {
+        title: req.body.title,
+        text: req.body.text,
+        tags: req.body.tags,
+        user: req.userId,
+        imageUrl: req.body.imageUrl,
+      }
+    );
+
+    if (updateResult.matchedCount === 0) {
+      return res.status(404).json({
+        message: "Статья не найдена",
+      });
+    }
+
+    res.json({
+      message: "Статья успешно обновлена",
+    });
+
+  } catch (error) {
+    console.error("Ошибка при обновлении статьи:", error);
+    res.status(500).json({
+      message: "Не удалось обновить статью",
+    });
+  }
+};

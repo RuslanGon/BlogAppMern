@@ -4,7 +4,7 @@ import startServer from './db.js';
 import registerValidator from './validations/auth.js';
 import {checkAuth} from './utils/checkAuth.js'
 import { getMe, login, register } from './controllers/UserController.js';
-import { createPost, deletePost, getAllPosts, getPostById } from './controllers/PostContloller.js';
+import { createPost, deletePost, getAllPosts, getPostById, updatePost } from './controllers/PostContloller.js';
 import postValidator from './validations/post.js';
 
 const app = express();
@@ -27,6 +27,8 @@ app.get('/posts', getAllPosts)
 app.get('/posts/:id', getPostById)
 
 app.delete('/posts/:id', checkAuth, deletePost )
+
+app.patch('/posts/:id', updatePost)
 
 
 
