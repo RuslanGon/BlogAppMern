@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ const RegisterPage = () => {
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -25,8 +27,14 @@ const RegisterPage = () => {
 
     try {
       const response = await axios.post('http://localhost:4444/auth/register', formData);
-      setSuccess('Регистрация прошла успешно! Можешь войти.');
+
+      // Сохраняем токен и данные пользователя
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userInfo', JSON.stringify(response.data));
+
+      setSuccess('Регистрация прошла успешно! Вы вошли.');
       setFormData({ fullName: '', email: '', password: '' });
+      navigate('/main');
     } catch (err) {
       setError(err.response?.data?.message || 'Ошибка регистрации');
     }

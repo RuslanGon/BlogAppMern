@@ -26,6 +26,11 @@ const LoginPage = () => {
 
     try {
       const response = await axios.post('http://localhost:4444/auth/login', formData);
+
+      // Сохраняем токен и данные пользователя
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userInfo', JSON.stringify(response.data));
+
       setSuccess('Вход выполнен успешно!');
       navigate('/main'); 
     } catch (err) {

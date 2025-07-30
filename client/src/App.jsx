@@ -7,6 +7,7 @@ import MainPage from './pages/RegisterPage /MainPage/MainPage.jsx';
 import Footer from './components/Footer/Footer.jsx';
 import './App.css'; 
 import AddPost from './pages/AddPost/AddPost.jsx';
+import MyPostPage from './pages/MyPostPage/MyPostPage.jsx';
 
 const App = () => {
   return (
@@ -18,6 +19,8 @@ const App = () => {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/main" element={<AddPost />} />
+          <Route path="/my-post" element={<MyPostPage />} />
+
 
         </Routes>
       </main>

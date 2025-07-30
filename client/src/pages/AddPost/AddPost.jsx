@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import styles from './AddPost.module.css'
+import { useNavigate } from 'react-router-dom';
+
 
 const AddPost = () => {
   const [title, setTitle] = useState('')
@@ -8,6 +10,7 @@ const AddPost = () => {
   const [tags, setTags] = useState('')
   const [image, setImage] = useState(null)
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate();
 
   const token = localStorage.getItem('token')
 
@@ -57,6 +60,7 @@ const AddPost = () => {
       setTags('')
       setImage(null)
       alert('Пост успешно добавлен!')
+      navigate('/my-post');
     } catch (err) {
       console.error('Ошибка при добавлении поста', err)
       alert('Ошибка добавления поста')
