@@ -6,7 +6,7 @@ import startServer from './db.js';
 import registerValidator from './validations/auth.js';
 import { checkAuth } from './utils/checkAuth.js';
 import { getMe, login, register } from './controllers/UserController.js';
-import { createPost, deletePost, getAllPosts, getPostById, updatePost } from './controllers/PostContloller.js';
+import { createPost, deletePost, getAllPosts, getMyPosts, getPostById, updatePost } from './controllers/PostContloller.js';
 import postValidator from './validations/post.js';
 
 const app = express();
@@ -45,6 +45,7 @@ app.get('/auth/me', checkAuth, getMe);
 
 // Посты
 app.get('/posts', getAllPosts);
+app.get('/posts/mine', checkAuth, getMyPosts); 
 app.get('/posts/:id', getPostById);
 app.post('/posts', checkAuth, postValidator, createPost);
 app.delete('/posts/:id', checkAuth, deletePost);

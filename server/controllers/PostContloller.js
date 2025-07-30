@@ -106,3 +106,15 @@ export const updatePost = async (req, res) => {
     });
   }
 };
+
+export const getMyPosts = async (req, res) => {
+  try {
+    const posts = await PostModel.find({ user: req.userId }).populate('user', '-passwordHash').exec();
+    res.json(posts);
+  } catch (error) {
+    console.error("Ошибка при получении моих постов:", error);
+    res.status(500).json({
+      message: "Не удалось получить мои посты",
+    });
+  }
+};
