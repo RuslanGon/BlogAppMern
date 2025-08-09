@@ -1,48 +1,45 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { fetchLogin, selectIsAuth } from "../../redux/slice/user";
 
 const LoginPage = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
-
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const isAuth = useSelector(selectIsAuth);
+  const { status, error } = useSelector((state) => state.user);
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
   const handleChange = (e) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
-
-    try {
-      const response = await axios.post('http://localhost:4444/auth/login', formData);
-
-      // Сохраняем токен и данные пользователя
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userInfo', JSON.stringify(response.data));
-
-      setSuccess('Вход выполнен успешно!');
-      navigate('/my-post'); 
-    } catch (err) {
-      setError(err.response?.data?.message || 'Ошибка входа');
-    }
+    dispatch(fetchLogin(formData));
   };
 
+  // Если авторизованы — переходим на /my-post
+  useEffect(() => {
+    if (isAuth) {
+      navigate("/my-post");
+    }
+  }, [isAuth, navigate]);
+
   return (
-    <div style={{ maxWidth: 400, margin: 'auto', padding: 20 }}>
+    <div style={{ maxWidth: 400, margin: "auto", padding: 20 }}>
       <h2>Вход</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {status === "loading" && <p>Вход...</p>}
 
       <form onSubmit={handleSubmit}>
         <div>
@@ -53,7 +50,7 @@ const LoginPage = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            style={{ width: '100%', marginBottom: 10, padding: 8 }}
+            style={{ width: "100%", marginBottom: 10, padding: 8 }}
           />
         </div>
 
@@ -65,11 +62,13 @@ const LoginPage = () => {
             value={formData.password}
             onChange={handleChange}
             required
-            style={{ width: '100%', marginBottom: 20, padding: 8 }}
+            style={{ width: "100%", marginBottom: 20, padding: 8 }}
           />
         </div>
 
-        <button type="submit" style={{ padding: '10px 20px' }}>Войти</button>
+        <button type="submit" style={{ padding: "10px 20px" }}>
+          Войти
+        </button>
       </form>
     </div>
   );

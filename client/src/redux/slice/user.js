@@ -15,16 +15,19 @@ export const fetchLogin = createAsyncThunk(
 );
 
 export const fetchRegister = createAsyncThunk(
-  "user/fetchRegister",
-  async (params, { rejectWithValue }) => {
-    try {
-      const { data } = await axios.post("/auth/register", params);
-      return data;
-    } catch (err) {
-      return rejectWithValue(err.response?.data || "Ошибка регистрации");
+    "user/fetchRegister",
+    async (params, { rejectWithValue }) => {
+      try {
+        const { data } = await axios.post("/auth/register", params);
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+        }
+        return data;
+      } catch (err) {
+        return rejectWithValue(err.response?.data?.message || "Ошибка регистрации");
+      }
     }
-  }
-);
+  );
 
 export const fetchAuthMe = createAsyncThunk(
   "user/fetchAuthMe",

@@ -14,14 +14,17 @@ const App = () => {
     <div className="app-wrapper">
       <Header />
       <main className="main-content">
-        <Routes>
+      <Routes>
+          {/* Главная страница */}
           <Route path="/" element={<MainPage />} />
+
+          {/* Авторизация */}
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/main" element={<AddPost />} />
+
+          {/* Посты */}
+          <Route path="/add-post" element={<AddPost />} />
           <Route path="/my-post" element={<MyPostPage />} />
-
-
         </Routes>
       </main>
       <Footer />

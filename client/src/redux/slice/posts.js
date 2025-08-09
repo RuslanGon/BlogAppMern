@@ -1,33 +1,66 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "../../utils/axios.js"; 
 
-const INITIAL_STATE = {
-  posts: {
-    items: [],
-    status: 'loading'
-  },
-  tags: {
-    items: [],
-    status: 'loading'
-  },
-};
+export const fetchAddPost = createAsyncThunk(
+  "posts/fetchAddPost",
+  async ({ title, text, tags, image }, { rejectWithValue, getState }) => {
+    try {
+      const state = getState();
+      const token = state.user.data?.token || localStorage.getItem("token");
+
+      let imageUrl = "";
+
+      if (image) {
+        const formData = new FormData();
+        formData.append("image", image);
+        const uploadRes = await axios.post("/upload", formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        imageUrl = uploadRes.data.url;
+      }
+
+      const postRes = await axios.post(
+        "/posts",
+        {
+          title,
+          text,
+          tags,
+          imageUrl,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      return postRes.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Ошибка добавления поста");
+    }
+  }
+);
 
 const postsSlice = createSlice({
   name: "posts",
-  initialState: INITIAL_STATE,
+  initialState: {
+    items: [],
+    status: "idle",
+    error: null,
+  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-    //   .addCase(apiGetContacts.pending, (state) => {
-    //     state.isLoading = true;
-    //     state.isError = false;
-    //   })
-    //   .addCase(apiGetContacts.fulfilled, (state, action) => {
-    //     state.isLoading = false;
-    //     state.contacts = action.payload;
-    //   })
-    //   .addCase(apiGetContacts.rejected, (state) => {
-    //     state.isLoading = false;
-    //     state.isError = true;
-    //   });
+      .addCase(fetchAddPost.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(fetchAddPost.fulfilled, (state, action) => {
+        state.status = "loaded";
+        state.items.push(action.payload); // добавляем созданный пост в список
+      })
+      .addCase(fetchAddPost.rejected, (state, action) => {
+        state.status = "error";
+        state.error = action.payload;
+      });
   },
 });
 

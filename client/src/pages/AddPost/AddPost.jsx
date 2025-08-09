@@ -1,73 +1,59 @@
-import React, { useState } from 'react'
-import axios from 'axios'
-import styles from './AddPost.module.css'
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import api from '../../utils/axios';
+import styles from './AddPost.module.css';
 
 const AddPost = () => {
-  const [title, setTitle] = useState('')
-  const [text, setText] = useState('')
-  const [tags, setTags] = useState('')
-  const [image, setImage] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [title, setTitle] = useState('');
+  const [text, setText] = useState('');
+  const [tags, setTags] = useState('');
+  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const token = localStorage.getItem('token')
-
   const handleImageUpload = async () => {
-    if (!image) return ''
+    if (!image) return '';
 
-    const formData = new FormData()
-    formData.append('image', image)
+    const formData = new FormData();
+    formData.append('image', image);
 
     try {
-      const res = await axios.post('http://localhost:4444/upload', formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      return res.data.url
+      const res = await api.post('/upload', formData);
+      return res.data.url;
     } catch (err) {
-      console.error('Ошибка загрузки изображения', err)
-      return ''
+      console.error('Ошибка загрузки изображения', err);
+      return '';
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
-    const uploadedImageUrl = await handleImageUpload()
+    const uploadedImageUrl = await handleImageUpload();
 
     try {
-      await axios.post(
-        'http://localhost:4444/posts',
-        {
-          title,
-          text,
-          tags: tags.split(',').map((tag) => tag.trim()),
-          imageUrl: uploadedImageUrl,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      await api.post('/posts', {
+        title,
+        text,
+        tags: tags.split(',').map(tag => tag.trim()),
+        imageUrl: uploadedImageUrl,
+      });
 
-      setTitle('')
-      setText('')
-      setTags('')
-      setImage(null)
-      alert('Пост успешно добавлен!')
+      setTitle('');
+      setText('');
+      setTags('');
+      setImage(null);
+
+      alert('Пост успешно добавлен!');
       navigate('/my-post');
     } catch (err) {
-      console.error('Ошибка при добавлении поста', err)
-      alert('Ошибка добавления поста')
+      console.error('Ошибка при добавлении поста', err);
+      alert('Ошибка добавления поста');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
@@ -109,7 +95,7 @@ const AddPost = () => {
         {loading ? 'Добавление...' : 'Добавить пост'}
       </button>
     </form>
-  )
-}
+  );
+};
 
-export default AddPost
+export default AddPost;
