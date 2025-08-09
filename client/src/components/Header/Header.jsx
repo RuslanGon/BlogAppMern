@@ -17,6 +17,7 @@ const Header = ({ isAuth }) => {
           </>
         ) : (
           <>
+            <Link className={styles.link} to="main">Добавить статью</Link>
             <Link className={styles.link} to="/login">Войти</Link>
             <Link className={styles.link} to="/register">Создать аккаунт</Link>
           </>

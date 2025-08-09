@@ -32,7 +32,7 @@ const LoginPage = () => {
       localStorage.setItem('userInfo', JSON.stringify(response.data));
 
       setSuccess('Вход выполнен успешно!');
-      navigate('/main'); 
+      navigate('/my-post'); 
     } catch (err) {
       setError(err.response?.data?.message || 'Ошибка входа');
     }
