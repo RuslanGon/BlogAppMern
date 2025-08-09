@@ -3,16 +3,15 @@ import axios from "../../utils/axios.js";
 
 // Асинхронные экшены (thunks)
 export const fetchLogin = createAsyncThunk(
-  "user/fetchLogin",
-  async (params, { rejectWithValue }) => {
-    try {
-      const { data } = await axios.post("/auth/login", params);
+    'user/fetchLogin',
+    async (params) => {
+      const { data } = await axios.post('/auth/login', params);
+      if (data.token) {
+        window.localStorage.setItem('token', data.token);
+      }
       return data;
-    } catch (err) {
-      return rejectWithValue(err.response?.data || "Ошибка входа");
     }
-  }
-);
+  );
 
 export const fetchRegister = createAsyncThunk(
     "user/fetchRegister",

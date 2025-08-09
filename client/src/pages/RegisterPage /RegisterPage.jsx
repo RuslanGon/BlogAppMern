@@ -31,7 +31,7 @@ const RegisterPage = () => {
   // Если авторизовались, переходим на главную
   useEffect(() => {
     if (isAuth) {
-      navigate("/main");
+      navigate("/login");
     }
   }, [isAuth, navigate]);
 
